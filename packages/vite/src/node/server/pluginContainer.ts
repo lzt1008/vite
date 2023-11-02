@@ -216,7 +216,6 @@ export async function createPluginContainer(
     for (const plugin of getSortedPlugins(hookName)) {
       // Don't throw here if closed, so buildEnd and closeBundle hooks can finish running
       const hook = plugin[hookName]
-      if (!hook) continue
 
       const handler: Function = getHookHandler(hook)
       if ((hook as { sequential?: boolean }).sequential) {
@@ -647,7 +646,6 @@ export async function createPluginContainer(
       const partial: Partial<PartialResolvedId> = {}
       for (const plugin of getSortedPlugins('resolveId')) {
         if (closed && !ssr) throwClosedServerError()
-        if (!plugin.resolveId) continue
         if (skip?.has(plugin)) continue
 
         ctx._activePlugin = plugin
@@ -709,7 +707,6 @@ export async function createPluginContainer(
       ctx.ssr = !!ssr
       for (const plugin of getSortedPlugins('load')) {
         if (closed && !ssr) throwClosedServerError()
-        if (!plugin.load) continue
         ctx._activePlugin = plugin
         const handler = getHookHandler(plugin.load)
         const result = await handleHookPromise(
@@ -732,7 +729,6 @@ export async function createPluginContainer(
       ctx.ssr = !!ssr
       for (const plugin of getSortedPlugins('transform')) {
         if (closed && !ssr) throwClosedServerError()
-        if (!plugin.transform) continue
         ctx._activePlugin = plugin
         ctx._activeId = id
         ctx._activeCode = code
