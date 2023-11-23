@@ -61,7 +61,7 @@ export async function ssrLoadModule(
   url: string,
   server: ViteDevServer,
   context: SSRContext = { global },
-  urlStack: string[] = [],
+  urlStack: Set<string> = new Set(),
   fixStacktrace?: boolean,
 ): Promise<SSRModule> {
   url = unwrapId(url)
@@ -97,7 +97,7 @@ async function instantiateModule(
   url: string,
   server: ViteDevServer,
   context: SSRContext = { global },
-  urlStack: string[] = [],
+  urlStack: Set<string> = new Set(),
   fixStacktrace?: boolean,
 ): Promise<SSRModule> {
   const { moduleGraph } = server
@@ -132,8 +132,8 @@ async function instantiateModule(
     url: pathToFileURL(mod.file!).toString(),
   }
 
-  urlStack = urlStack.concat(url)
-  const isCircular = (url: string) => urlStack.includes(url)
+  urlStack.add(url)
+  const isCircular = (url: string) => urlStack.has(url)
 
   const {
     isProduction,
